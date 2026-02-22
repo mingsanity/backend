@@ -68,6 +68,7 @@ public class SecurityConfig {
         cfg.setAllowedOrigins(List.of(
                 "http://localhost:5173",
                 "http://localhost:3000"
+                "https://datn-sandy.vercel.app"
                 // "https://YOUR-FRONTEND.vercel.app"
         ));
 
