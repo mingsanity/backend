@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .build();
     }
 
-    // ✅ everything else requires JWT
+    // ✅ public endpoints + everything else requires JWT
     @Bean
     @Order(2)
     public SecurityFilterChain apiChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) throws Exception {
@@ -53,6 +53,7 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/", "/health").permitAll() // ✅ allow Render health check + root
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
@@ -62,7 +63,14 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration cfg = new CorsConfiguration();
-        cfg.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:3000"));
+
+        // Local dev origins (add Vercel domain later)
+        cfg.setAllowedOrigins(List.of(
+                "http://localhost:5173",
+                "http://localhost:3000"
+                // "https://YOUR-FRONTEND.vercel.app"
+        ));
+
         cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         cfg.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         cfg.setAllowCredentials(true);
