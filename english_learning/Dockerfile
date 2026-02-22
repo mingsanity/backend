@@ -8,7 +8,7 @@ RUN chmod +x mvnw
 RUN ./mvnw -q -DskipTests dependency:go-offline
 
 COPY src src
-RUN ./mvnw -DskipTests package -X
+RUN ./mvnw -DskipTests package
 
 # ---------- run stage ----------
 FROM eclipse-temurin:17-jre
